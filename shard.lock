@@ -1,0 +1,6 @@
+version: 2.0
+shards:
+  opus-crystal:
+    git: https://github.com/fizvlad/opus-crystal.git
+    version: 0.1.0+git.commit.9ac821d603740c449393346657f81291570cce77
+

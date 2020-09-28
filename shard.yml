@@ -2,7 +2,11 @@ name: mp3_to_dca
 version: 0.1.0
 
 authors:
-  - your-name-here <your-email-here>
+  - fizvlad <fizvlad@mail.ru>
+
+dependencies:
+  opus-crystal:
+    github: fizvlad/opus-crystal
 
 targets:
   mp3_to_dca:
