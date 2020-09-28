@@ -4,7 +4,11 @@ Executable to convert MP3 audio into DCA format
 
 ## Usage
 
-Call `./mp3_to_dca --help` to see usage
+Call `./bin/mp3_to_dca --help` to see usage
+
+## Build
+
+Call `crystal build -s -t -p --release ./src/main.cr -o ./bin/mp3_to_dca`
 
 ## Contributing
 
