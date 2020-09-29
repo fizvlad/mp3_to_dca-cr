@@ -11,8 +11,12 @@ module Mp3ToDca
   # Use of this executable requires installed ffmpeg (besides opus ofc).
 
   # Method which writes DCA metadata to provided `IO`.
-  # TODO: Add ability to change metadata.
-  def self.metadata(io : IO) : Nil
+  def self.metadata(
+    io : IO,
+    sample_rate : Int32 = 48000,
+    frame_size : Int32 = 960,
+    channels : Int32 = 2
+  ) : Nil
     json = JSON.build(io) do |json|
       json.object do
         # [REQUIRED] General information about this particular DCA file
@@ -41,15 +45,15 @@ module Mp3ToDca
             # [REQUIRED] The opus mode, also called application - "voip", "music", or "lowdelay"
             json.field "mode", "voip"
             # [REQUIRED] The sample rate in Hz
-            json.field "sample_rate", 48000
+            json.field "sample_rate", sample_rate
             # [REQUIRED] The frame size in bytes
-            json.field "frame_size", 960
+            json.field "frame_size", frame_size
             # [REQUIRED] The resulting audio bitrate in bits per second, or null if the default has not been changed
             json.field "abr", nil
             # [REQUIRED] Whether variable bitrate encoding has been used (true/false)
             json.field "vbr", true
             # [REQUIRED] The resulting number of audio channels
-            json.field "channels", 2
+            json.field "channels", channels
           end
         end
         # Information about the audio track. This attribute is optional but it is highly recommended to add whenever possible
@@ -77,7 +81,7 @@ module Mp3ToDca
             # Source bitrate in bits per second
             json.field "abr", nil
             # Number of channels in the source data
-            json.field "channels", 2
+            json.field "channels", channels
             # Source encoding
             json.field "encoding", nil
             # The URL the source can be found at, or omitted if it wasn't downloaded from the network. Do not put a file path in here, it should be reserved for remote URLs only
@@ -103,24 +107,26 @@ module Mp3ToDca
   end
 
   # Method which returns string with DCA metadata.
-  # TODO: Add ability to change metadata.
-  def self.metadata : String
+  def self.metadata(*args, **named_args) : String
     String.build do |str|
-      self.metadata(str)
+      self.metadata(str, *args, **named_args)
     end
   end
 
   # Reads data from provided `IO` object and print encoded data to output `IO`.
   # Provided block will be yielded with `IO::Memory` containing audio data. This
   # allows you to affect sound in any way you want.
-  # TODO: Add ability to change metadata (Current settings are `sample_rate = 48000`, `frame_size = 960`, `channels = 2`).
-  def self.encode(input : IO, output : IO, &) : Nil
+  def self.encode(
+    input : IO,
+    output : IO,
+    sample_rate : Int32 = 48000,
+    frame_size : Int32 = 960,
+    channels : Int32 = 2,
+    &block : IO::Memory -> Nil
+  ) : Nil
     # Metadata
     output.print("DCA1")
-    sample_rate = 48000
-    frame_size = 960
-    channels = 2
-    meta = self.metadata
+    meta = self.metadata(sample_rate: sample_rate, frame_size: frame_size, channels: channels)
     output.write_bytes(meta.size.to_i32, IO::ByteFormat::LittleEndian)
     output.print(meta)
 
@@ -155,9 +161,7 @@ module Mp3ToDca
   end
 
   # Reads data from provided `IO` object and print encoded data to output `IO`.
-  def self.encode(input : IO, output : IO) : Nil
-    self.encode(input, output) do |memory|
-      # Do nothing
-    end
+  def self.encode(*args, **named_args)
+    self.encode(*args, **named_args) {}
   end
 end
