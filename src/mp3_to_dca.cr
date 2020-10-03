@@ -5,7 +5,7 @@ require "opus-crystal"
 
 # Main module
 module Mp3ToDca
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
 
   # This executable turns audio file into DCA format: https://github.com/bwmarrin/dca#dca
   # Use of this executable requires installed ffmpeg (besides opus ofc).

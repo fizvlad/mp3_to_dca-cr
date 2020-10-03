@@ -18,8 +18,8 @@ OptionParser.parse do |parser|
   parser.separator ""
   parser.separator "Options:"
   parser.on("-v FLOAT", "--volume=FLOAT", "Volume multiplier (Default: 1.0)") { |val| volume = val.to_f }
-  parser.on("-ar INTEGER", "--sample-rate=INTEGER", "Sample rate (Default: 48000)") { |val| volume = val.to_i }
-  parser.on("-ac INTEGER", "--channels=INTEGER", "Amount of channels (Default: 2)") { |val| volume = val.to_i }
+  parser.on("-r INTEGER", "--sample-rate=INTEGER", "Sample rate (Default: 48000)") { |val| sample_rate = val.to_i }
+  parser.on("-c INTEGER", "--channels=INTEGER", "Amount of channels (Default: 2)") { |val| channels = val.to_i }
 
   parser.separator ""
   parser.separator "Other:"
